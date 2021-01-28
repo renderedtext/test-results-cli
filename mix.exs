@@ -5,7 +5,7 @@ defmodule ResultParser.MixProject do
     [
       app: :result_parser,
       version: "0.1.0",
-      elixir: "~> 1.11",
+      elixir: "~> 1.8.2",
       deps: deps(),
       escript: escript()
     ]
