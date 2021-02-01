@@ -1,4 +1,4 @@
 .PHONY: build
 
 build:
-	mix deps.get && mix escript.build
+	mix do deps.get, escript.build

@@ -10,6 +10,7 @@ defmodule ResultParser do
       in_path
       |> File.stream!()
       |> process_stream()
+      |> process_output()
       |> to_json()
       |> IO.write()
     else
@@ -22,6 +23,7 @@ defmodule ResultParser do
       in_path
       |> File.stream!()
       |> process_stream()
+      |> process_output()
       |> to_json()
       |> save_file(out_path)
       |> case do
@@ -72,6 +74,92 @@ defmodule ResultParser do
     end)
   end
 
+  def process_output(results) do
+    results
+    |> Enum.map(fn %{testcases: testcases} = testsuite ->
+      files =
+        testcases
+        |> Enum.group_by(fn %{file: file} ->
+          file
+        end)
+        |> Enum.map(fn {file, file_cases} ->
+          {failed_cases, success_cases} =
+            file_cases
+            |> Enum.split_with(fn
+              %{failure: nil} -> false
+              %{failure: _} -> true
+            end)
+
+          failed_cases =
+            failed_cases
+            |> Enum.map(&format_failure(&1, testsuite))
+
+          success_cases =
+            success_cases
+            |> Enum.map(&format_success(&1, testsuite))
+
+          %{
+            file: file,
+            failed_cases: failed_cases,
+            success_cases: success_cases
+          }
+        end)
+
+      %{
+        name: testsuite.name,
+        test_count: testsuite.tests,
+        failure_count: testsuite.failures,
+        success_count: testsuite.tests - testsuite.failures,
+        timestamp: format_timestamp(testsuite.timestamp),
+        duration: format_duration(testsuite.time),
+        files: files
+      }
+    end)
+  end
+
+  defp format_failure(
+         %{
+           classname: classname,
+           name: name,
+           failure: %{
+             message: message_short,
+             text: message_long,
+             type: failure_type
+           },
+           time: time
+         },
+         testsuite
+       ) do
+    %{
+      id: to_id("#{testsuite.name}.#{classname}.#{name}"),
+      class: classname,
+      name: name,
+      duration: format_duration(time),
+      message_short: message_short,
+      message_long: message_long,
+      failure_type: failure_type
+    }
+  end
+
+  defp format_success(
+         %{
+           classname: classname,
+           name: name,
+           time: time
+         },
+         testsuite
+       ) do
+    %{
+      id: to_id("#{testsuite.name}.#{classname}.#{name}"),
+      class: classname,
+      name: name,
+      duration: format_duration(time),
+      message_short: nil,
+      message_long: nil,
+      failure_type: nil
+    }
+  end
+
   defp to_json(results) do
     results
     |> Poison.encode!()
@@ -80,5 +168,27 @@ defmodule ResultParser do
   defp save_file(json, file) do
     file
     |> File.write(json, [:binary])
+  end
+
+  defp to_id(string) do
+    :crypto.hash(:md5, string)
+    |> Base.encode16()
+    |> String.downcase()
+  end
+
+  defp format_duration(duration) do
+    duration
+    |> Float.parse()
+    |> case do
+      {duration, _garbage} -> duration
+    end
+  end
+
+  defp format_timestamp(timestamp) do
+    Timex.parse(timestamp, "{ISO:Extended}")
+    |> case do
+      {:ok, timestamp} -> timestamp
+      _ -> nil
+    end
   end
 end
