@@ -52,6 +52,7 @@ defmodule ResultParser do
           skipped: ~x"//testsuite/@skipped"io,
           errors: ~x"//testsuite/@errors"io,
           timestamp: ~x"//testsuite/@timestamp"so,
+          file: ~x"//testsuite/@file"so,
           testcases: [
             ~x"./testcase"l,
             # Schema defined attributes for testcase
@@ -62,6 +63,7 @@ defmodule ResultParser do
             # Vendor-specific attributes
             file: ~x"./@file"s,
             classname: ~x"./@classname"s,
+            skipped: ~x"./skipped"o,
             failure: [
               ~x"./failure"o,
               # Schema defined attributes for failure
@@ -76,9 +78,16 @@ defmodule ResultParser do
 
   def process_output(results) do
     results
-    |> Enum.map(fn %{testcases: testcases} = testsuite ->
+    |> Enum.map(fn %{testcases: testcases, file: testsuite_file} = testsuite ->
       files =
         testcases
+        |> Enum.map(fn
+          %{file: file} = testcase when file == "" or is_nil(file) ->
+            %{testcase | file: testsuite_file}
+
+          testcase ->
+            testcase
+        end)
         |> Enum.group_by(fn %{file: file} ->
           file
         end)
@@ -126,7 +135,8 @@ defmodule ResultParser do
              text: message_long,
              type: failure_type
            },
-           time: time
+           time: time,
+           skipped: skipped
          },
          testsuite
        ) do
@@ -137,7 +147,8 @@ defmodule ResultParser do
       duration: format_duration(time),
       message_short: message_short,
       message_long: message_long,
-      failure_type: failure_type
+      failure_type: failure_type,
+      skipped: not is_nil(skipped)
     }
   end
 
@@ -145,7 +156,8 @@ defmodule ResultParser do
          %{
            classname: classname,
            name: name,
-           time: time
+           time: time,
+           skipped: skipped
          },
          testsuite
        ) do
@@ -156,7 +168,8 @@ defmodule ResultParser do
       duration: format_duration(time),
       message_short: nil,
       message_long: nil,
-      failure_type: nil
+      failure_type: nil,
+      skipped: not is_nil(skipped)
     }
   end
 
