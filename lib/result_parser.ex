@@ -53,6 +53,11 @@ defmodule ResultParser do
           errors: ~x"//testsuite/@errors"io,
           timestamp: ~x"//testsuite/@timestamp"so,
           file: ~x"//testsuite/@file"so,
+          properties: [
+            ~x"./properties/property"lo,
+            name: ~x"./@name"s,
+            value: ~x"./@value"s
+          ],
           testcases: [
             ~x"./testcase"l,
             # Schema defined attributes for testcase
@@ -78,12 +83,24 @@ defmodule ResultParser do
 
   def process_output(results) do
     results
-    |> Enum.map(fn %{testcases: testcases, file: testsuite_file} = testsuite ->
+    |> Enum.map(fn %{
+                     testcases: testcases,
+                     name: testsuite_name,
+                     file: testsuite_file,
+                     properties: properties
+                   } = testsuite ->
       files =
         testcases
         |> Enum.map(fn
           %{file: file} = testcase when file == "" or is_nil(file) ->
-            %{testcase | file: testsuite_file}
+            testsuite_file
+            |> case do
+              testsuite_file when testsuite_file == "" or is_nil(testsuite_file) ->
+                %{testcase | file: testsuite_name}
+
+              testsuite_file ->
+                %{testcase | file: testsuite_file}
+            end
 
           testcase ->
             testcase
@@ -110,7 +127,8 @@ defmodule ResultParser do
           %{
             file: file,
             failed_cases: failed_cases,
-            success_cases: success_cases
+            success_cases: success_cases,
+            properties: properties
           }
         end)
 
