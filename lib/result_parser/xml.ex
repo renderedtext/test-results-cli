@@ -91,7 +91,12 @@ defmodule ResultParser.XML do
       file
       |> :xmerl_scan.file()
 
-    first_node = Node.first(doc, "/*")
+    parse_root(doc)
+  end
+
+  @spec parse_root(term()) :: t()
+  def parse_root(xml_node) do
+    first_node = Node.first(xml_node, "/*")
 
     first_node
     |> Node.node_name()
