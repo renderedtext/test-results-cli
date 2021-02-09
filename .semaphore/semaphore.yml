@@ -1,0 +1,34 @@
+version: v1.0
+name: Initial Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: 'Block #1'
+    task:
+      jobs:
+        - name: Build
+          commands:
+            - checkout
+            - mix local.hex --force
+            - mix local.rebar --force
+            - cache restore
+            - 'mix do deps.get, compile'
+            - cache store
+      env_vars:
+        - name: MIX_ENV
+          value: test
+  - name: Test
+    task:
+      env_vars:
+        - name: MIX_ENV
+          value: test
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+      jobs:
+        - name: mix
+          commands:
+            - mix test
