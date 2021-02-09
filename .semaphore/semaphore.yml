@@ -37,5 +37,5 @@ blocks:
             - cache store
             - artifact pull workflow jobs/junit.xml
             - make
-            - ./test_results jobs/junit.xml jobs/junit.json
+            - ./result_parser jobs/junit.xml jobs/junit.json
             - artifact push workflow jobs/junit.json -d jobs/junit.json
