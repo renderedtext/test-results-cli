@@ -1,11 +1,6 @@
 defmodule ResultParser.XML.Node do
   require Record
 
-  @type t ::
-          nil
-          | {:xmlElement, term(), term(), term(), term(), term(), term(), term(), term(), term(),
-             term(), term()}
-
   Record.defrecord(
     :xmlAttribute,
     Record.extract(:xmlAttribute, from_lib: "xmerl/include/xmerl.hrl")

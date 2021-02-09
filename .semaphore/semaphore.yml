@@ -14,7 +14,7 @@ blocks:
             - mix local.hex --force
             - mix local.rebar --force
             - cache restore
-            - 'mix do deps.get, compile'
+            - 'mix do deps.get, compile --warnings-as-errors'
             - cache store
       env_vars:
         - name: MIX_ENV
@@ -32,3 +32,4 @@ blocks:
         - name: mix
           commands:
             - mix test --trace
+            - artifact push workflow jobs/junit-$SEMAPHORE_JOB_INDEX.xml

@@ -7,8 +7,7 @@ defmodule ResultParser.Parser.ExUnit do
 
   @impl ResultParser.Parser
   def parse(results) do
-    results
-    |> process_root_suite()
+    process_root_suite(results)
   end
 
   @impl ResultParser.Parser
@@ -25,6 +24,7 @@ defmodule ResultParser.Parser.ExUnit do
     |> Enum.any?(&String.starts_with?(&1, "Elixir."))
   end
 
+  @impl ResultParser.Parser
   def applicable?(_) do
     false
   end

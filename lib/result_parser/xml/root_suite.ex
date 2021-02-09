@@ -4,13 +4,11 @@ defmodule ResultParser.XML.RootSuite do
   """
 
   alias __MODULE__
-  alias ResultParser.XML
 
-  @type t() :: %RootSuite{
-          name: String.t() | nil,
-          time: String.t() | nil,
-          test_suites: [XML.TestSuite.t()]
-        }
+  alias ResultParser.XML.{
+    TestSuite,
+    Node
+  }
 
   defstruct [
     :name,
@@ -18,23 +16,29 @@ defmodule ResultParser.XML.RootSuite do
     :test_suites
   ]
 
+  @type t() :: %RootSuite{
+          name: String.t() | nil,
+          time: String.t() | nil,
+          test_suites: [TestSuite.t()]
+        }
+
   @spec parse(any()) :: t()
   def parse(xml_node) do
     xml_node
-    |> XML.Node.node_name()
+    |> Node.node_name()
     |> case do
       :testsuites ->
         %RootSuite{
-          name: XML.Node.attr(xml_node, "name"),
-          time: XML.Node.attr(xml_node, "time"),
-          test_suites: XML.Node.all(xml_node, ".//testsuite") |> Enum.map(&XML.TestSuite.parse/1)
+          name: Node.attr(xml_node, "name"),
+          time: Node.attr(xml_node, "time"),
+          test_suites: Node.all(xml_node, ".//testsuite") |> Enum.map(&TestSuite.parse/1)
         }
 
       :testsuite ->
         %RootSuite{
-          name: XML.Node.attr(xml_node, "name"),
-          time: XML.Node.attr(xml_node, "time"),
-          test_suites: [xml_node] |> Enum.map(&XML.TestSuite.parse/1)
+          name: Node.attr(xml_node, "name"),
+          time: Node.attr(xml_node, "time"),
+          test_suites: [xml_node] |> Enum.map(&TestSuite.parse/1)
         }
 
       _ ->

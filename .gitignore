@@ -32,3 +32,6 @@ priv/results
 
 # Binary from escript
 /result_parser
+
+# Output junit test file
+/junit.xml
