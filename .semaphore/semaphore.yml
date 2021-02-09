@@ -31,4 +31,4 @@ blocks:
       jobs:
         - name: mix
           commands:
-            - mix test
+            - mix test --trace
