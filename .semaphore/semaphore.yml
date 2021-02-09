@@ -5,10 +5,10 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: 'Block #1'
+  - name: 'Test'
     task:
       jobs:
-        - name: Build
+        - name: Build for testing
           commands:
             - checkout
             - mix local.hex --force
@@ -16,23 +16,31 @@ blocks:
             - cache restore
             - 'mix do deps.get, compile --warnings-as-errors'
             - cache store
+
+        - name: Test
+          commands:
+            - checkout
+            - cache restore
+            - mix test --trace
+            - artifact push workflow junit.xml -d jobs/junit.xml
       env_vars:
         - name: MIX_ENV
           value: test
-  - name: Test
+  - name: 'Build'
     task:
       env_vars:
         - name: MIX_ENV
-          value: test
-      prologue:
-        commands:
-          - checkout
-          - cache restore
-      epilogue:
-        always:
-          commands:
-            - artifact push workflow junit.xml -d jobs/junit$SEMAPHORE_JOB_INDEX.xml
+          value: production
       jobs:
-        - name: mix
+        - name: Build for deployment
           commands:
-            - mix test --trace
+            - checkout
+            - mix local.hex --force
+            - mix local.rebar --force
+            - cache restore
+            - 'mix do deps.get, compile --warnings-as-errors'
+            - cache store
+            - artifact pull workflow jobs/junit.xml
+            - make
+            - ./test_results jobs/junit.xml jobs/junit.json
+            - artifact push workflow jobs/junit.json -d jobs/junit.json
