@@ -16,3 +16,16 @@ blocks:
             - cache restore
             - 'mix do deps.get, compile'
             - cache store
+  - name: Test
+    task:
+      env_vars:
+        - name: MIX_ENV
+          value: test
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+      jobs:
+        - name: mix
+          commands:
+            - mix test
