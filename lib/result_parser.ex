@@ -5,11 +5,11 @@ defmodule ResultParser do
 
   @available_parsers Application.get_env(:result_parser, :available_parsers)
 
-  def to_stdout(in_path) do
+  def to_stdout(in_path, parse_opts \\ []) do
     with true <- File.exists?(in_path) do
       in_path
       |> ResultParser.XML.parse()
-      |> parse
+      |> parse(parse_opts)
       |> ResultParser.Utils.to_json!()
       |> IO.write()
     else
@@ -17,11 +17,11 @@ defmodule ResultParser do
     end
   end
 
-  def to_file(in_path, out_path) do
+  def to_file(in_path, out_path, parse_opts \\ []) do
     with true <- File.exists?(in_path) do
       in_path
       |> ResultParser.XML.parse()
-      |> parse
+      |> parse(parse_opts)
       |> ResultParser.Utils.to_json!()
       |> save_file(out_path)
       |> case do
@@ -33,16 +33,30 @@ defmodule ResultParser do
     end
   end
 
-  def parse(xml) do
-    @available_parsers
-    |> Enum.find(& &1.applicable?(xml))
-    |> case do
-      nil ->
-        nil
+  def parse(xml, parse_opts) do
+    selected_parser =
+      parse_opts
+      |> Keyword.get(:type)
+      |> case do
+        nil ->
+          nil
 
-      parser ->
-        parser.parse(xml)
-    end
+        type ->
+          @available_parsers
+          |> Enum.find(&(&1.name() == type))
+      end
+      |> case do
+        nil ->
+          @available_parsers
+          |> Enum.find(& &1.applicable?(xml))
+
+        parser ->
+          parser
+      end
+
+    IO.write("Parsing using #{selected_parser.name()} parser\n")
+
+    selected_parser.parse(xml)
   end
 
   defp save_file(json, file) do

@@ -16,25 +16,24 @@ defmodule ResultParser.XML.TestSuiteTest do
         </testsuite>
       """
 
-      xml
-      |> XMLHelper.parse_xml()
-      |> ResultParser.XML.TestSuite.parse()
-      |> case do
-        parsed_testsuite ->
-          assert %TestSuite{
-                   id: "1",
-                   name: "test",
-                   tests: "3",
-                   failures: "0",
-                   time: "0.0015",
-                   skipped: "0",
-                   errors: "0",
-                   timestamp: "",
-                   file: "/path/to/file",
-                   testcases: [],
-                   properties: []
-                 } = parsed_testsuite
-      end
+      parsed =
+        xml
+        |> XMLHelper.parse_xml()
+        |> TestSuite.parse()
+
+      assert %TestSuite{
+               id: "1",
+               name: "test",
+               tests: "3",
+               failures: "0",
+               time: "0.0015",
+               skipped: "0",
+               errors: "0",
+               timestamp: "",
+               file: "/path/to/file",
+               test_cases: [],
+               properties: []
+             } = parsed
     end
 
     test "provides valid output for <testsuite> element with testcases" do
@@ -44,25 +43,24 @@ defmodule ResultParser.XML.TestSuiteTest do
         </testsuite>
       """
 
-      xml
-      |> XMLHelper.parse_xml()
-      |> TestSuite.parse()
-      |> case do
-        parsed_testsuite ->
-          assert %TestSuite{
-                   id: "1",
-                   name: "test",
-                   tests: "3",
-                   failures: "0",
-                   time: "0.0015",
-                   skipped: "0",
-                   errors: "0",
-                   timestamp: "",
-                   file: "/path/to/file",
-                   testcases: [%TestCase{name: "test"}],
-                   properties: []
-                 } = parsed_testsuite
-      end
+      parsed =
+        xml
+        |> XMLHelper.parse_xml()
+        |> TestSuite.parse()
+
+      assert %TestSuite{
+               id: "1",
+               name: "test",
+               tests: "3",
+               failures: "0",
+               time: "0.0015",
+               skipped: "0",
+               errors: "0",
+               timestamp: "",
+               file: "/path/to/file",
+               test_cases: [%TestCase{name: "test"}],
+               properties: []
+             } = parsed
     end
 
     test "provides valid output for <testsuite> element with properties" do
@@ -74,25 +72,24 @@ defmodule ResultParser.XML.TestSuiteTest do
         </testsuite>
       """
 
-      xml
-      |> XMLHelper.parse_xml()
-      |> TestSuite.parse()
-      |> case do
-        parsed_testsuite ->
-          assert %TestSuite{
-                   id: "1",
-                   name: "test",
-                   tests: "3",
-                   failures: "0",
-                   time: "0.0015",
-                   skipped: "0",
-                   errors: "0",
-                   timestamp: "",
-                   file: "/path/to/file",
-                   testcases: [],
-                   properties: [%Property{name: "foo", value: "bar"}]
-                 } = parsed_testsuite
-      end
+      parsed =
+        xml
+        |> XMLHelper.parse_xml()
+        |> TestSuite.parse()
+
+      assert %TestSuite{
+               id: "1",
+               name: "test",
+               tests: "3",
+               failures: "0",
+               time: "0.0015",
+               skipped: "0",
+               errors: "0",
+               timestamp: "",
+               file: "/path/to/file",
+               test_cases: [],
+               properties: [%Property{name: "foo", value: "bar"}]
+             } = parsed
     end
   end
 end

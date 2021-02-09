@@ -1,21 +1,28 @@
 defmodule ResultParser.CLI do
+  @available_parsers Application.get_env(:result_parser, :available_parsers)
+
   def main(args) do
-    {_switch_opts, argv, _} = OptionParser.parse(args, strict: [])
+    {switch_opts, argv, _} = OptionParser.parse(args, strict: [type: :string])
 
     argv
     |> case do
       [input_file | [output_file | _]] ->
-        ResultParser.to_file(input_file, output_file)
+        ResultParser.to_file(input_file, output_file, switch_opts)
 
       [input_file | _] ->
-        ResultParser.to_stdout(input_file)
+        ResultParser.to_stdout(input_file, switch_opts)
 
       _ ->
         IO.write("""
 
-        Usage: ./result_parser INPUT_PATH [OUTPUT_PATH]
+        Usage: ./result_parser INPUT_PATH [OUTPUT_PATH] [--type type]
 
         Parsers XML file locatet at INPUT_PATH and outputs resulting JSON to OUTPUT_PATH or stdio if no output file is given
+
+        Options:
+          --type string Type of parser to be used: (#{
+          @available_parsers |> Enum.map(& &1.name()) |> Enum.join("|")
+        })
         """)
     end
   end

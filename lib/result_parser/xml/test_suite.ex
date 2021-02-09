@@ -17,7 +17,7 @@ defmodule ResultParser.XML.TestSuite do
           timestamp: String.t() | nil,
           file: String.t() | nil,
           properties: [XML.Property.t()],
-          testcases: [XML.TestCase.t()]
+          test_cases: [XML.TestCase.t()]
         }
 
   defstruct [
@@ -31,7 +31,7 @@ defmodule ResultParser.XML.TestSuite do
     :timestamp,
     :file,
     :properties,
-    :testcases
+    :test_cases
   ]
 
   @spec parse(any()) :: t()
@@ -55,7 +55,7 @@ defmodule ResultParser.XML.TestSuite do
       timestamp: XML.Node.attr(xml_node, "timestamp"),
       file: XML.Node.attr(xml_node, "file"),
       properties: properties,
-      testcases: test_cases
+      test_cases: test_cases
     }
   end
 end

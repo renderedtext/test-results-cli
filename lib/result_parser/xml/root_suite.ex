@@ -9,17 +9,13 @@ defmodule ResultParser.XML.RootSuite do
   @type t() :: %RootSuite{
           name: String.t() | nil,
           time: String.t() | nil,
-          tests: String.t() | nil,
-          failures: String.t() | nil,
-          testsuites: [XML.TestSuite.t()]
+          test_suites: [XML.TestSuite.t()]
         }
 
   defstruct [
     :name,
     :time,
-    :tests,
-    :failures,
-    :testsuites
+    :test_suites
   ]
 
   @spec parse(any()) :: t()
@@ -31,27 +27,21 @@ defmodule ResultParser.XML.RootSuite do
         %RootSuite{
           name: XML.Node.attr(xml_node, "name"),
           time: XML.Node.attr(xml_node, "time"),
-          tests: XML.Node.attr(xml_node, "tests"),
-          failures: XML.Node.attr(xml_node, "failures"),
-          testsuites: XML.Node.all(xml_node, ".//testsuite") |> Enum.map(&XML.TestSuite.parse/1)
+          test_suites: XML.Node.all(xml_node, ".//testsuite") |> Enum.map(&XML.TestSuite.parse/1)
         }
 
       :testsuite ->
         %RootSuite{
           name: XML.Node.attr(xml_node, "name"),
           time: XML.Node.attr(xml_node, "time"),
-          tests: XML.Node.attr(xml_node, "tests"),
-          failures: XML.Node.attr(xml_node, "failures"),
-          testsuites: [xml_node] |> Enum.map(&XML.TestSuite.parse/1)
+          test_suites: [xml_node] |> Enum.map(&XML.TestSuite.parse/1)
         }
 
       _ ->
         %RootSuite{
           name: "Not Found",
           time: "0",
-          tests: "0",
-          failures: "0",
-          testsuites: []
+          test_suites: []
         }
     end
   end

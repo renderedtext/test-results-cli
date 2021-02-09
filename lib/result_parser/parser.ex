@@ -1,9 +1,10 @@
 defmodule ResultParser.Parser do
   alias ResultParser.{
     XML,
-    Result
+    JSON
   }
 
-  @callback parse(XML.t()) :: Result.t()
-  @callback applicable?(XML.t()) :: true | false
+  @callback parse(XML.RootSuite.t()) :: JSON.RootSuite.t()
+  @callback applicable?(XML.RootSuite.t()) :: true | false
+  @callback name() :: String.t()
 end
