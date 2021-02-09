@@ -8,6 +8,11 @@ blocks:
   - name: 'Block #1'
     task:
       jobs:
-        - name: 'Job #1'
+        - name: Build
           commands:
             - checkout
+            - mix local.hex --force
+            - mix local.rebar --force
+            - cache restore
+            - 'mix do deps.get, compile'
+            - cache store
