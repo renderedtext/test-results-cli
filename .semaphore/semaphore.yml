@@ -16,6 +16,9 @@ blocks:
             - cache restore
             - 'mix do deps.get, compile'
             - cache store
+      env_vars:
+        - name: MIX_ENV
+          value: test
   - name: Test
     task:
       env_vars:
