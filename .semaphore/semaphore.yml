@@ -28,8 +28,11 @@ blocks:
         commands:
           - checkout
           - cache restore
+      epilogue:
+        always:
+          commands:
+            - artifact push workflow junit.xml -d jobs/junit$SEMAPHORE_JOB_INDEX.xml
       jobs:
         - name: mix
           commands:
             - mix test --trace
-            - artifact push workflow jobs/junit-$SEMAPHORE_JOB_INDEX.xml
