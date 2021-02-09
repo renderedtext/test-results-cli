@@ -7,7 +7,8 @@ defmodule ResultParser.MixProject do
       version: "0.1.0",
       elixir: "~> 1.8.2",
       deps: deps(),
-      escript: escript()
+      escript: escript(),
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
@@ -21,6 +22,9 @@ defmodule ResultParser.MixProject do
   def escript() do
     [main_module: ResultParser.CLI]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
