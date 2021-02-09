@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: 'Test'
+  - name: Test
     task:
       jobs:
         - name: Build for testing
@@ -16,17 +16,12 @@ blocks:
             - cache restore
             - 'mix do deps.get, compile --warnings-as-errors'
             - cache store
-
-        - name: Test
-          commands:
-            - checkout
-            - cache restore
             - mix test --trace
             - artifact push workflow junit.xml -d jobs/junit.xml
       env_vars:
         - name: MIX_ENV
           value: test
-  - name: 'Build'
+  - name: Build
     task:
       env_vars:
         - name: MIX_ENV
@@ -42,5 +37,5 @@ blocks:
             - cache store
             - artifact pull workflow jobs/junit.xml
             - make
-            - ./test_results junit.xml junit.json
+            - ./result_parser junit.xml junit.json
             - artifact push workflow junit.json -d jobs/junit.json
