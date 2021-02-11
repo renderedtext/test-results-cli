@@ -4,23 +4,26 @@ defmodule ResultParser.XML.Property do
   """
 
   alias __MODULE__
-  alias ResultParser.XML
 
-  @type t() :: %Property{
-          name: String.t() | nil,
-          value: String.t() | nil
-        }
+  alias ResultParser.XML.{
+    Node
+  }
 
   defstruct [
     :name,
     :value
   ]
 
+  @type t() :: %Property{
+          name: String.t() | nil,
+          value: String.t() | nil
+        }
+
   @spec parse(any()) :: t()
   def parse(xml_node) do
     %Property{
-      name: XML.Node.attr(xml_node, "name"),
-      value: XML.Node.attr(xml_node, "value")
+      name: Node.attr(xml_node, "name"),
+      value: Node.attr(xml_node, "value")
     }
   end
 end

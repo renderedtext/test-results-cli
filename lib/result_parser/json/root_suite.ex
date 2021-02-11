@@ -5,9 +5,6 @@ defmodule ResultParser.JSON.RootSuite do
   defstruct [
     :id,
     :name,
-    :total_tests,
-    :passed_tests,
-    :failed_tests,
     :time,
     :test_suites
   ]

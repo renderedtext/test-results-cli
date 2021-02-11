@@ -33,7 +33,10 @@ defmodule ResultParser do
     end
   end
 
-  def parse(xml, parse_opts) do
+  def publish() do
+  end
+
+  defp parse(xml, parse_opts) do
     selected_parser =
       parse_opts
       |> Keyword.get(:type)
