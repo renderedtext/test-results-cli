@@ -29,7 +29,7 @@ defmodule ResultParser.Parser.RSpec do
 
   defp process_root_suite(%XML.RootSuite{} = root_suite) do
     root_suite_id = Utils.to_id(root_suite.name)
-    test_suites = Enum.map(root_suite.test_suites, &process_test_suite(&1, root_suite))
+    test_suites = Enum.map(root_suite.test_suites, &process_test_suite(&1, root_suite_id))
 
     JSON.RootSuite.build(%{
       id: root_suite_id,
