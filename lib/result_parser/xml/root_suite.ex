@@ -5,6 +5,8 @@ defmodule ResultParser.XML.RootSuite do
 
   alias __MODULE__
 
+  alias ResultParser.Utils
+
   alias ResultParser.XML.{
     TestSuite,
     Node
@@ -18,7 +20,7 @@ defmodule ResultParser.XML.RootSuite do
 
   @type t() :: %RootSuite{
           name: String.t() | nil,
-          time: String.t() | nil,
+          time: float(),
           test_suites: [TestSuite.t()]
         }
 
@@ -30,21 +32,21 @@ defmodule ResultParser.XML.RootSuite do
       :testsuites ->
         %RootSuite{
           name: Node.attr(xml_node, "name"),
-          time: Node.attr(xml_node, "time"),
+          time: Node.attr(xml_node, "time") |> Utils.cast_to_float(),
           test_suites: Node.all(xml_node, ".//testsuite") |> Enum.map(&TestSuite.parse/1)
         }
 
       :testsuite ->
         %RootSuite{
           name: Node.attr(xml_node, "name"),
-          time: Node.attr(xml_node, "time"),
+          time: Node.attr(xml_node, "time") |> Utils.cast_to_float(),
           test_suites: [xml_node] |> Enum.map(&TestSuite.parse/1)
         }
 
       _ ->
         %RootSuite{
           name: "Not Found",
-          time: "0",
+          time: "0" |> Utils.cast_to_float(),
           test_suites: []
         }
     end

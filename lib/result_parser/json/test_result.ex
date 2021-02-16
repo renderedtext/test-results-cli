@@ -18,7 +18,7 @@ defmodule ResultParser.JSON.TestResult do
   @type t :: %TestResult{
           id: String.t(),
           name: String.t(),
-          time: String.t(),
+          time: float(),
           file: String.t(),
           classname: String.t(),
           is_skipped: boolean(),
@@ -30,7 +30,7 @@ defmodule ResultParser.JSON.TestResult do
   @type t_build_params :: %{
           id: String.t(),
           name: String.t(),
-          time: String.t(),
+          time: float(),
           file: String.t(),
           classname: String.t(),
           is_skipped: boolean(),

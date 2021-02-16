@@ -25,15 +25,32 @@ defmodule ResultParser do
       |> ResultParser.Utils.to_json!()
       |> save_file(out_path)
       |> case do
-        :ok -> IO.write("Save to #{Path.expand(out_path)} successful\n")
-        _ -> IO.write(:stderr, "Save to #{Path.expand(out_path)} failed\n")
+        :ok ->
+          IO.write("Save to #{Path.expand(out_path)} successful\n")
+          :ok
+
+        _ ->
+          IO.write(:stderr, "Save to #{Path.expand(out_path)} failed\n")
+          :error
       end
     else
-      _ -> IO.write(:stderr, "#{Path.expand(in_path)} doesn't exist\n")
+      _ ->
+        IO.write(:stderr, "#{Path.expand(in_path)} doesn't exist\n")
+        :error
     end
   end
 
-  def publish() do
+  def publish_artifacts(input_file, parse_opts \\ []) do
+    File.mkdir_p("/tmp/test-results")
+
+    to_file(input_file, "/tmp/test-results/junit.json", parse_opts)
+    |> case do
+      :ok ->
+        System.cmd("artifact", ["push", "job", "/tmp/test-results", "-d test-results"])
+
+      _error ->
+        IO.write(:stderr, "publishing artifacts error\n")
+    end
   end
 
   defp parse(xml, parse_opts) do
@@ -59,7 +76,16 @@ defmodule ResultParser do
 
     IO.write("Parsing using #{selected_parser.name()} parser\n")
 
-    selected_parser.parse(xml)
+    output = selected_parser.parse(xml)
+
+    Keyword.get(parse_opts, :name)
+    |> case do
+      nil ->
+        output
+
+      name ->
+        %{output | name: name}
+    end
   end
 
   defp save_file(json, file) do

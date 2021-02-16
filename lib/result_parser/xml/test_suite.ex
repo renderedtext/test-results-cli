@@ -5,6 +5,8 @@ defmodule ResultParser.XML.TestSuite do
 
   alias __MODULE__
 
+  alias ResultParser.Utils
+
   alias ResultParser.XML.{
     TestCase,
     Property,
@@ -28,11 +30,11 @@ defmodule ResultParser.XML.TestSuite do
   @type t() :: %TestSuite{
           id: String.t() | nil,
           name: String.t() | nil,
-          tests: String.t() | nil,
-          failures: String.t() | nil,
-          time: String.t() | nil,
-          skipped: String.t() | nil,
-          errors: String.t() | nil,
+          time: float(),
+          tests: non_neg_integer(),
+          failures: non_neg_integer(),
+          skipped: non_neg_integer(),
+          errors: non_neg_integer(),
           timestamp: String.t() | nil,
           file: String.t() | nil,
           properties: [Property.t()],
@@ -52,11 +54,11 @@ defmodule ResultParser.XML.TestSuite do
     %TestSuite{
       id: Node.attr(xml_node, "id"),
       name: Node.attr(xml_node, "name"),
-      tests: Node.attr(xml_node, "tests"),
-      failures: Node.attr(xml_node, "failures"),
-      time: Node.attr(xml_node, "time"),
-      skipped: Node.attr(xml_node, "skipped"),
-      errors: Node.attr(xml_node, "errors"),
+      time: Node.attr(xml_node, "time") |> Utils.cast_to_float(),
+      tests: Node.attr(xml_node, "tests") |> Utils.cast_to_integer(),
+      failures: Node.attr(xml_node, "failures") |> Utils.cast_to_integer(),
+      skipped: Node.attr(xml_node, "skipped") |> Utils.cast_to_integer(),
+      errors: Node.attr(xml_node, "errors") |> Utils.cast_to_integer(),
       timestamp: Node.attr(xml_node, "timestamp"),
       file: Node.attr(xml_node, "file"),
       properties: properties,

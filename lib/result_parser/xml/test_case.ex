@@ -5,6 +5,8 @@ defmodule ResultParser.XML.TestCase do
 
   alias __MODULE__
 
+  alias ResultParser.Utils
+
   alias ResultParser.XML.{
     Node
   }
@@ -23,7 +25,7 @@ defmodule ResultParser.XML.TestCase do
 
   @type t() :: %TestCase{
           name: String.t() | nil,
-          time: String.t() | nil,
+          time: float(),
           file: String.t() | nil,
           classname: String.t() | nil,
           is_skipped: boolean(),
@@ -39,7 +41,7 @@ defmodule ResultParser.XML.TestCase do
 
     %TestCase{
       name: Node.attr(xml_node, "name"),
-      time: Node.attr(xml_node, "time"),
+      time: Node.attr(xml_node, "time") |> Utils.cast_to_float(),
       file: Node.attr(xml_node, "file"),
       classname: Node.attr(xml_node, "classname"),
       is_skipped: not is_nil(Node.first(xml_node, "./skipped")),

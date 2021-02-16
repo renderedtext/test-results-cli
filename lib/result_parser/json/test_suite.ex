@@ -17,23 +17,23 @@ defmodule ResultParser.JSON.TestSuite do
   @type t :: %TestSuite{
           id: String.t(),
           name: String.t(),
-          total_tests: String.t(),
-          skipped_tests: String.t(),
-          passed_tests: String.t(),
-          failed_tests: String.t(),
-          errored_tests: String.t(),
-          time: String.t(),
+          total_tests: non_neg_integer(),
+          skipped_tests: non_neg_integer(),
+          passed_tests: non_neg_integer(),
+          failed_tests: non_neg_integer(),
+          errored_tests: non_neg_integer(),
+          time: float(),
           test_results: [TestResult.t()]
         }
   @type t_build_params :: %{
           id: String.t(),
           name: String.t(),
-          total_tests: String.t(),
-          skipped_tests: String.t(),
-          passed_tests: String.t(),
-          failed_tests: String.t(),
-          errored_tests: String.t(),
-          time: String.t(),
+          total_tests: non_neg_integer(),
+          skipped_tests: non_neg_integer(),
+          passed_tests: non_neg_integer(),
+          failed_tests: non_neg_integer(),
+          errored_tests: non_neg_integer(),
+          time: float(),
           test_results: [TestResult.t()]
         }
 

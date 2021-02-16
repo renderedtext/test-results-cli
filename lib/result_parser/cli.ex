@@ -1,29 +1,40 @@
 defmodule ResultParser.CLI do
   @available_parsers Application.get_env(:result_parser, :available_parsers)
+  @moduledoc """
+  Usage:
+    result_parser [command]
+
+  Available commands:
+    publish      creates test results and publishes artifacts to semaphore
+      INPUT_FILE [--type string] [--name string]
+    generate     generates test results
+      INPUT_FILE OUTPUT_FILE [--type string] [--name string]
+    print        prints resulting json file from xml
+      INPUT_FILE [--type string] [--name string]
+
+  Options:
+    --name string Name of test suite, by default - depends on test runner
+    --type string Type of parser to be used: (#{
+    @available_parsers |> Enum.map(& &1.name()) |> Enum.join("|")
+  })
+  """
 
   def main(args) do
-    {switch_opts, argv, _} = OptionParser.parse(args, strict: [type: :string])
+    {switch_opts, argv, _} = OptionParser.parse(args, strict: [type: :string, name: :string])
 
     argv
     |> case do
-      [input_file | [output_file | _]] ->
+      ["publish" | [input_file | _]] ->
+        ResultParser.publish_artifacts(input_file, switch_opts)
+
+      ["generate" | [input_file | [output_file | _]]] ->
         ResultParser.to_file(input_file, output_file, switch_opts)
 
-      [input_file | _] ->
+      ["print" | [input_file | _]] ->
         ResultParser.to_stdout(input_file, switch_opts)
 
       _ ->
-        IO.write("""
-
-        Usage: ./result_parser INPUT_PATH [OUTPUT_PATH] [--type type]
-
-        Parsers XML file locatet at INPUT_PATH and outputs resulting JSON to OUTPUT_PATH or stdio if no output file is given
-
-        Options:
-          --type string Type of parser to be used: (#{
-          @available_parsers |> Enum.map(& &1.name()) |> Enum.join("|")
-        })
-        """)
+        IO.puts(@moduledoc)
     end
   end
 

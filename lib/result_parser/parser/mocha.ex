@@ -14,7 +14,8 @@ defmodule ResultParser.Parser.Mocha do
   @impl ResultParser.Parser
   def applicable?(%XML.RootSuite{
         name: root_suite_name
-      }) do
+      })
+      when not is_nil(root_suite_name) do
     String.contains?(root_suite_name, ["mocha", "Mocha"])
   end
 
@@ -28,13 +29,23 @@ defmodule ResultParser.Parser.Mocha do
   end
 
   defp process_root_suite(%XML.RootSuite{} = root_suite) do
-    root_suite_id = Utils.to_id(root_suite.name)
+    root_suite_id =
+      Utils.ensure_name(root_suite.name)
+      |> Utils.to_id()
+
+    {tests_count, failures_count, skipped_count, errors_count} =
+      Utils.calculate_root_suite_stats(root_suite)
+
     test_suites = Enum.map(root_suite.test_suites, &process_test_suite(&1, root_suite_id))
 
     JSON.RootSuite.build(%{
       id: root_suite_id,
       name: root_suite.name,
-      time: root_suite.time,
+      time: Utils.calculate_root_suite_time(root_suite),
+      tests_count: tests_count,
+      failures_count: failures_count,
+      skipped_count: skipped_count,
+      errors_count: errors_count,
       test_suites: test_suites
     })
   end
