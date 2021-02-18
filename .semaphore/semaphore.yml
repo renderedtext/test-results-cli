@@ -17,7 +17,7 @@ blocks:
             - 'mix do deps.get, compile --warnings-as-errors'
             - cache store
             - mix test --trace
-            - artifact push workflow junit.xml -d jobs/junit.xml
+            - artifact push workflow junit.xml
       env_vars:
         - name: MIX_ENV
           value: test
@@ -35,7 +35,6 @@ blocks:
             - cache restore
             - 'mix do deps.get, compile --warnings-as-errors'
             - cache store
-            - artifact pull workflow jobs/junit.xml
             - make
-            - ./result_parser junit.xml junit.json
-            - artifact push workflow junit.json -d jobs/junit.json
+            - artifact pull workflow junit.xml
+            - ./result_parser publish junit.xml
