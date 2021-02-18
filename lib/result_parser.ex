@@ -54,8 +54,7 @@ defmodule ResultParser do
           System.cmd("artifact", [
             "push",
             "job",
-            "/tmp/test-results/#{file}",
-            "-d test-results-#{file}"
+            "/tmp/test-results/#{file}"
           ])
         end)
 
