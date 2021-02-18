@@ -43,6 +43,9 @@ defmodule ResultParser do
   def publish_artifacts(input_file, parse_opts \\ []) do
     File.mkdir_p("/tmp/test-results")
 
+    file_name = Path.basename(input_file)
+    File.cp(input_file, "/tmp/test-results/#{file_name}")
+
     to_file(input_file, "/tmp/test-results/junit.json", parse_opts)
     |> case do
       :ok ->
