@@ -25,7 +25,7 @@ defmodule ResultParser.XML.RootSuiteTest do
 
       assert %RootSuite{
                name: "testsuites#1",
-               time: "1",
+               time: 1.0,
                test_suites: [
                  %TestSuite{name: "testsuite#1"},
                  %TestSuite{name: "testsuite#2"}
@@ -48,7 +48,7 @@ defmodule ResultParser.XML.RootSuiteTest do
 
       assert %RootSuite{
                name: "testsuite#1",
-               time: "1",
+               time: 1.0,
                test_suites: [
                  %TestSuite{
                    name: "testsuite#1",

@@ -21,7 +21,7 @@ defmodule ResultParser.XML.TestCaseTest do
 
       assert %TestCase{
                name: "some_name",
-               time: "0.0001",
+               time: 0.0001,
                file: "/path/to/file",
                classname: "some_classname",
                is_skipped: false,
@@ -46,7 +46,7 @@ defmodule ResultParser.XML.TestCaseTest do
 
       assert %TestCase{
                name: "some_name",
-               time: "0.0001",
+               time: 0.0001,
                file: "/path/to/file",
                classname: "some_classname",
                is_skipped: true,
@@ -71,7 +71,7 @@ defmodule ResultParser.XML.TestCaseTest do
 
       assert %TestCase{
                name: "some_name",
-               time: "0.0001",
+               time: 0.0001,
                file: "/path/to/file",
                classname: "some_classname",
                is_skipped: false,
