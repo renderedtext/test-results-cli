@@ -55,7 +55,7 @@ defmodule ResultParser do
             "push",
             "job",
             "/tmp/test-results/#{file}",
-            "--destination test-results-#{file}"
+            "-d test-results-#{file}"
           ])
         end)
 
