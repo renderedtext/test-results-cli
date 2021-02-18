@@ -54,7 +54,7 @@ defmodule ResultParser.JSON.RootSuite do
       tests_count: tests_count,
       failures_count: failures_count,
       skipped_count: skipped_count,
-      success_count: tests_count - errors_count,
+      success_count: tests_count - errors_count - failures_count,
       errors_count: errors_count,
       test_suites: test_suites
     }

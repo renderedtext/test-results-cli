@@ -45,11 +45,17 @@ defmodule ResultParser.Parser.Generic do
 
   defp process_test_suite(%XML.TestSuite{} = test_suite, root_suite_id) do
     test_suite_id = Utils.to_id("#{root_suite_id}#{test_suite.name}")
-    test_results = Enum.map(test_suite.test_cases, &process_test_result(&1, test_suite_id))
+
+    test_results =
+      Enum.map(test_suite.test_cases, &process_test_result(&1, test_suite_id))
+      |> Enum.map(fn test_result ->
+        %{test_result | file: test_result.file || test_suite.file}
+      end)
 
     JSON.TestSuite.build(%{
       id: test_suite_id,
       name: test_suite.name,
+      file: test_suite.file,
       total_tests: test_suite.tests,
       skipped_tests: test_suite.skipped,
       passed_tests: test_suite.tests,

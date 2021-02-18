@@ -5,6 +5,7 @@ defmodule ResultParser.JSON.TestSuite do
   defstruct [
     :id,
     :name,
+    :file,
     :total_tests,
     :skipped_tests,
     :passed_tests,
@@ -17,6 +18,7 @@ defmodule ResultParser.JSON.TestSuite do
   @type t :: %TestSuite{
           id: String.t(),
           name: String.t(),
+          file: String.t(),
           total_tests: non_neg_integer(),
           skipped_tests: non_neg_integer(),
           passed_tests: non_neg_integer(),
@@ -28,6 +30,7 @@ defmodule ResultParser.JSON.TestSuite do
   @type t_build_params :: %{
           id: String.t(),
           name: String.t(),
+          file: String.t(),
           total_tests: non_neg_integer(),
           skipped_tests: non_neg_integer(),
           passed_tests: non_neg_integer(),
@@ -41,6 +44,7 @@ defmodule ResultParser.JSON.TestSuite do
   def build(%{
         id: id,
         name: name,
+        file: file,
         total_tests: total_tests,
         skipped_tests: skipped_tests,
         passed_tests: passed_tests,
@@ -52,6 +56,7 @@ defmodule ResultParser.JSON.TestSuite do
     %TestSuite{
       id: id,
       name: name,
+      file: file,
       total_tests: total_tests,
       skipped_tests: skipped_tests,
       passed_tests: passed_tests,
