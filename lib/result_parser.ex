@@ -49,9 +49,15 @@ defmodule ResultParser do
     to_file(input_file, "/tmp/test-results/junit.json", parse_opts)
     |> case do
       :ok ->
-        System.cmd("artifact", ["push", "job", "/tmp/test-results", "-d test-results"],
-          into: IO.stream(:stdio, :line)
-        )
+        ["junit.json", "junit.xml"]
+        |> Enum.each(fn file ->
+          System.cmd("artifact", [
+            "push",
+            "job",
+            "/tmp/test-results/#{file}",
+            "-d test-results/#{file}"
+          ])
+        end)
 
       _error ->
         IO.write(:stderr, "publishing artifacts error\n")
