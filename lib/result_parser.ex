@@ -52,8 +52,9 @@ defmodule ResultParser do
         System.cmd("artifact", [
           "push",
           "job",
+          "/tmp/test-results",
           "-d",
-          "/tmp/test-results"
+          "test-results"
         ])
 
       _error ->
