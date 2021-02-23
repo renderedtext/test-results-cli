@@ -77,7 +77,7 @@ defmodule ResultParser.Utils do
   def calculate_root_suite_time(%ResultParser.XML.RootSuite{} = root_suite) do
     root_suite.time
     |> case do
-      nil ->
+      time when is_nil(time) or time == 0 ->
         root_suite.test_suites
         |> Enum.map(& &1.time)
         |> Enum.sum()

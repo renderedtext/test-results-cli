@@ -96,4 +96,12 @@ defmodule ResultParser.Parser.ExUnit do
       failure_text: test_result.failure_text
     })
   end
+
+  defp format_test_suite_name(name) do
+    name
+    |> case do
+      "Elixir." <> module when length(module) > 0 -> module
+      name -> name
+    end
+  end
 end
