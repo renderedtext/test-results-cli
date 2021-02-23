@@ -68,7 +68,7 @@ defmodule ResultParser.Parser.ExUnit do
 
     JSON.TestSuite.build(%{
       id: test_suite_id,
-      name: test_suite.name,
+      name: format_test_suite_name(test_suite.name),
       file: test_suite.file,
       total_tests: test_suite.tests,
       skipped_tests: test_suite.skipped,
@@ -100,7 +100,7 @@ defmodule ResultParser.Parser.ExUnit do
   defp format_test_suite_name(name) do
     name
     |> case do
-      "Elixir." <> module when length(module) > 0 -> module
+      "Elixir." <> module when module != "" -> module
       name -> name
     end
   end
