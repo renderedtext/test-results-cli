@@ -35,3 +35,4 @@ priv/results
 
 # Output junit test file
 /junit.xml
+/bin

@@ -1,0 +1,14 @@
+FROM elixir:1.8.2-otp-22-alpine
+
+WORKDIR /build
+
+ADD mix.* ./
+RUN mix local.hex --force && \
+  mix deps.get --force
+
+ADD config ./config
+ADD lib ./lib
+
+RUN mix do compile, escript.build
+
+CMD ["/bin/ash"]

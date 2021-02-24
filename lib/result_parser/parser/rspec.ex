@@ -6,12 +6,12 @@ defmodule ResultParser.Parser.RSpec do
     Utils
   }
 
-  @impl ResultParser.Parser
+  @impl true
   def parse(results) do
     process_root_suite(results)
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def applicable?(%XML.RootSuite{
         name: root_suite_name
       })
@@ -23,7 +23,7 @@ defmodule ResultParser.Parser.RSpec do
     false
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def name() do
     "rspec"
   end

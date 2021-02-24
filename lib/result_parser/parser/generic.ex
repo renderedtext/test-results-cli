@@ -6,17 +6,17 @@ defmodule ResultParser.Parser.Generic do
     Utils
   }
 
-  @impl ResultParser.Parser
+  @impl true
   def parse(results) do
     process_root_suite(results)
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def applicable?(_) do
     true
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def name() do
     "generic"
   end

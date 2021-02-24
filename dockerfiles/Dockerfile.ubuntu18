@@ -1,0 +1,17 @@
+FROM semaphoreci/ubuntu:18.04
+
+WORKDIR /build
+RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0
+RUN echo '. $HOME/.asdf/asdf.sh' > ~/.bashrc
+ADD .tool-versions ./
+# RUN asdf install
+# ADD mix.* ./
+# RUN mix local.hex --force && \
+#   mix deps.get --force
+
+# ADD config ./config
+# ADD lib ./lib
+
+# RUN mix do compile, escript.build
+
+CMD ["/bin/ash"]

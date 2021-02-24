@@ -57,7 +57,7 @@ defmodule ResultParser.Utils do
     end
   end
 
-  @spec calculate_root_suite_stats(ResultParser.XML.t()) ::
+  @spec calculate_root_suite_stats(ResultParser.XML.RootSuite.t()) ::
           {tests_count :: non_neg_integer(), failures_count :: non_neg_integer(),
            skipped_count :: non_neg_integer(), errors_count :: non_neg_integer()}
   def calculate_root_suite_stats(%ResultParser.XML.RootSuite{} = root_suite) do

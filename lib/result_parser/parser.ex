@@ -4,7 +4,7 @@ defmodule ResultParser.Parser do
     JSON
   }
 
-  @callback parse(XML.RootSuite.t()) :: JSON.RootSuite.t()
-  @callback applicable?(XML.RootSuite.t()) :: true | false
+  @callback parse(root_suite :: XML.RootSuite.t()) :: JSON.RootSuite.t()
+  @callback applicable?(root_suite :: XML.RootSuite.t()) :: boolean()
   @callback name() :: String.t()
 end

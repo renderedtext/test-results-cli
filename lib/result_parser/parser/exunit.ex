@@ -6,12 +6,12 @@ defmodule ResultParser.Parser.ExUnit do
     Utils
   }
 
-  @impl ResultParser.Parser
+  @impl true
   def parse(results) do
     process_root_suite(results)
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def applicable?(%XML.RootSuite{
         name: root_suite_name,
         test_suites: test_suites
@@ -25,12 +25,12 @@ defmodule ResultParser.Parser.ExUnit do
     |> Enum.any?(&String.starts_with?(&1, "Elixir."))
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def applicable?(_) do
     false
   end
 
-  @impl ResultParser.Parser
+  @impl true
   def name() do
     "exunit"
   end

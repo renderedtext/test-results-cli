@@ -29,7 +29,6 @@ defmodule ResultParser.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:sweet_xml, "~> 0.6.6"},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.6.3"},
       {:tzdata, "~> 0.1.8", override: true},
